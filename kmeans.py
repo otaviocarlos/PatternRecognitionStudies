@@ -8,11 +8,6 @@ import random
 
 # FIXME: column names are defined to be 'x' and 'y' -> only 2D data is accepted.
 # TODO: set standard names to N columns
-# TODO: create a stop condition: 
-#       a   = acceptance point
-#       clp = centroids las pos
-#       cnp = centroids new pos
-#       if cnp - clp < a , stop the algorithm
 
 class K_means():
     def __init__(self, data, k = 3, alpha = 0.05):

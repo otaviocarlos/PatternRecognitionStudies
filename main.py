@@ -13,13 +13,13 @@ import random
 
 
 def testKMEANS():
-    data = pd.read_table("datasets/mouse.txt", engine='python', sep = ',', header=None )
+    data = pd.read_table("datasets/g2-8-30.txt", engine='python', sep = ',', header=None )
     # data = pp.scale(data)
     # setting cols names
-    # TODO: set standard names to N columns
+    # TODO: set standard names to N columns or use default pandas names assigns
     data.columns = ['x','y']
     # instanciating kmeans
-    km = K_means(data, k=3, alpha=0.001)
+    km = K_means(data, k=8, alpha=0.001)
 
     # updating algorithm
     km.update()
