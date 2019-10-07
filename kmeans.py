@@ -78,7 +78,6 @@ class K_means():
         self.df['group'] = groups  
 
     def updateGroups(self):
-        groups = []
         # calculate the distance of data samples to each centroid, setting each group
         for i in range(self.dim[0]):
             dist = []
@@ -100,6 +99,8 @@ class K_means():
     def updateCentroidsPos(self, means):
         # TODO: when in N dimensions, use a second for loop to run 
         #       throug a array of "positions"
+        # FIXME: remove the try-except. It is being used to handle 
+        #        centroids that have no point assigned.
         isFixed = []
         for count, c in enumerate(self.centroids):
             try:
@@ -110,7 +111,8 @@ class K_means():
                 isFixed.append(c.checkMovement())
 
             except:
-                pass
+                c.resetPos()
+                # pass
         
         # checking if all centroids are moving significantly
         self.checkFixed(isFixed)
@@ -167,4 +169,8 @@ class Centroids():
         newPos = np.array([self.x,self.y])
         dif = True if (Dist.euclid(newPos,self.lastPos)) < self.alpha else False 
         return dif
+
+    def resetPos(self):
+        self.x = random.random()
+        self.y = random.random()
 
