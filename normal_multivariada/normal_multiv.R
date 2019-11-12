@@ -1,12 +1,15 @@
 # install.packages('plotly')
 
 library(LaplacesDemon)
-library(plotly)
 library(MASS)
 
 f1 = list(mean = matrix(c(2,1)), S = matrix(c(2,1,1,2),2,2) )
 f2 = list(mean = matrix(c(0,0)), S = matrix(c(1,3/5,3/5,2),2,2) )
 f3 = list(mean = matrix(c(3,2)), S = matrix(c(1,0,0,1),2,2) )
+
+f4 = list(mean = matrix(c(0,5,0)), S = matrix(c(1,0.7,0,  0.7,1,0,  0,0,1),3,3) )
+f5 = list(mean = matrix(c(1,5,2)), S = matrix(c(2/5,0.7,0,  0.7,2/5,0,  0,0,1),3,3) )
+
 
 
 normal_multivar = function(vals, mean, S){
@@ -47,7 +50,7 @@ for(i in 1:length(seq1)){
     }
 }
 
-image( seq1, seq2, A, col=heat.colors(20) )
+t = image( seq1, seq2, A, col=heat.colors(20) )
 contour( seq1, seq2 , A, add = T)
 image( seq1, seq2, B, col=heat.colors(20) )
 contour( seq1, seq2 , B, add = T)
@@ -77,3 +80,37 @@ plot(1, type="n", xlab="", ylab="", xlim=c(0, 40000), ylim=c(0, 0.15))
 points(c(A), main = 'function 1', col = 'red', cex = 0.5, pch = 20)
 points(c(B), main = 'function 2', col = 'green', cex = 0.5, pch = 20)
 points(c(C), main = 'function 2', col = 'blue', cex = 0.5, pch = 20)
+
+
+
+# plotting 3D
+library(plotly)
+
+n = 10
+seq1 = seq(-5,5, length = n)
+seq2 = seq(-5,5, length = n)
+seq3 = seq(-5,5, length = n)
+
+A = array(0, dim = c(n,n,n))
+B = array(0, dim = c(n,n,n))
+for(i in 1:length(seq1)){
+    for(j in 1:length(seq2)){
+        for(k in 1:length(seq3)){
+            A[i,j,k] =  normal_multivar( matrix(c(seq1[i],seq2[j],seq3[k])) , f4$mean, f4$S )
+            B[i,j,k] =  normal_multivar( matrix(c(seq1[i],seq2[j],seq3[k])) , f5$mean, f5$S )
+        }
+    }
+}
+
+# plotting decision frontier
+D = array(0, dim = c(n,n,n))
+
+for(i in 1:length(seq1)){
+    for(j in 1:length(seq2)){
+        for(k in 1:length(seq3)){
+            D[i,j,k] = A[i,j,k] - B[i,j,k]
+        }
+    }
+}
+
+plot_ly( data.frame(D), x = seq1, y = seq2, z = seq3, type = 'scatter3d', mode='lines') 
